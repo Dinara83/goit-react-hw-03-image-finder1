@@ -5,7 +5,11 @@ import css from './image-gallery-item.module.css';
 const ImageGalleryItem = ({ webImg, largeImg, openModal }) => {
   return (
     <li className={css.galleryItem} onClick={() => openModal(largeImg)}>
-      <img className={css.galleryItemImage} src={webImg} alt="" />
+      <img
+        className={css.galleryItemImage}
+        src={webImg}
+        alt=""
+      />
     </li>
   );
 };

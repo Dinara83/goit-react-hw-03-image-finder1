@@ -20,7 +20,7 @@ class App extends Component {
     loading: false,
     error: null,
     page: 1,
-    showModal: false,
+    isModalOpen: false,
     largeImage: '',
   };
 
@@ -34,10 +34,9 @@ class App extends Component {
   async fetchSearchRequest() {
     try {
       this.setState({ loading: true });
-      const { page, searchRequest, images } = this.state;
+      const { page, searchRequest } = this.state;
       const data = await searchApi(searchRequest, page);
-      console.log(searchApi);
-      if (!images.length && !searchRequest) {
+      if (!data.data.hits.length) {
         this.setState({ loading: false });
         toast.error(
           `Sorry, there are no images matching your search ${searchRequest}. Please try again.`,
@@ -49,10 +48,9 @@ class App extends Component {
         return;
       } else {
         this.setState(({ images }) => ({
-          images: [...images, ...data.hits],
+          images: [...images, ...data.data.hits],
         }));
-        this.setState({ total: data.totalHits });
-        toast.success(`Hooray! We found ${data.totalHits} images.`);
+        toast.success(`Hooray! We found ${data.data.hits.length} images.`);
       }
     } catch (error) {
       this.setState({ error: error.messege });
@@ -61,45 +59,42 @@ class App extends Component {
     }
   }
 
-  handleSearchbarSubmit = ({ searchRequest }) => {
+  handleSearchbarSubmit = searchRequest => {
     this.setState({ searchRequest, images: [], page: 1 });
   };
 
   loadMore = () => {
-    this.setState(({ page }) => ({ page: page + 1 }));
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
-  openModal = largeImageURL => {
+  //   loadMore = () => {
+  //     this.setState(({ page }) => ({ page: page + 1 }));
+  //   };
+
+  openModal = ({ largeImageURL }) => {
     this.setState({
-      showModal: true,
-      largeImage: { largeImageURL },
+      isModalOpen: true,
+      largeImage: largeImageURL,
     });
   };
 
   closeModal = () => {
     this.setState({
-      showModal: false,
-      largeImage: null,
+      isModalOpen: false,
+      largeImage: '',
     });
   };
 
   render() {
-    const {
-      images,
-      loading,
-      error,
-      largeImage,
-      showModal,
-      searchRequest,
-    } = this.state;
+    const { images, loading, error, largeImage, searchRequest, isModalOpen } =
+      this.state;
     const { handleSearchbarSubmit, loadMore, closeModal, openModal } = this;
 
     return (
       <div className={css.app}>
-
         <Searchbar onSubmit={handleSearchbarSubmit} />
 
-       <ImageGallery images={images} openModal={openModal} />
+        <ImageGallery images={images} openModal={openModal} />
 
         {loading && <Loader />}
         {error && <p>{error}</p>}
@@ -107,15 +102,12 @@ class App extends Component {
 
         <ToastContainer autoClose={3000} />
 
-        {Boolean(images.length) && (
-          <Button onClick={loadMore} />
-        )}
+        {Boolean(images.length) && <Button onloadMore={loadMore} />}
 
-        {showModal && (
+        {isModalOpen && (
           <Modal onClose={closeModal}>
             <img src={largeImage} alt="" />
           </Modal>
-
         )}
       </div>
     );
