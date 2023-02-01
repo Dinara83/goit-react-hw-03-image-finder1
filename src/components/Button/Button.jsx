@@ -4,14 +4,16 @@ import css from './btn.module.css';
 
 const Button = ({ onloadMore }) => {
   return (
-    <button type="button" className={css.button} onClick={onloadMore}>
-      Load more
-    </button>
+    <div className={css.containerBtn}>
+      <button type="button" className={css.button} onClick={onloadMore}>
+        Load more
+      </button>
+    </div>
   );
 };
 
 export default Button;
 
 Button.propTypes = {
-	loadMore: PropTypes.func.isRequired,
+  loadMore: PropTypes.func.isRequired,
 };

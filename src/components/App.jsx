@@ -67,14 +67,10 @@ class App extends Component {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
-  //   loadMore = () => {
-  //     this.setState(({ page }) => ({ page: page + 1 }));
-  //   };
-
-  openModal = ({ largeImageURL }) => {
+  openModal = largeImageURL => {
     this.setState({
-      isModalOpen: true,
       largeImage: largeImageURL,
+      isModalOpen: true,
     });
   };
 
