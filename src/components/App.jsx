@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
-import { searchApi } from 'components/services/api';
+import { searchApi } from 'services/api';
 
 import { Loader } from 'components/Loader/Loader';
 import Modal from './Modal/Modal';
@@ -90,7 +90,9 @@ class App extends Component {
       <div className={css.app}>
         <Searchbar onSubmit={handleSearchbarSubmit} />
 
-        <ImageGallery images={images} openModal={openModal} />
+        {images.length !== 0 && (
+          <ImageGallery images={images} openModal={openModal} />
+        )}
 
         {loading && <Loader />}
         {error && <p>{error}</p>}
@@ -98,7 +100,7 @@ class App extends Component {
 
         <ToastContainer autoClose={3000} />
 
-        {Boolean(images.length) && <Button onloadMore={loadMore} />}
+        {!loading && Boolean(images.length) && <Button onloadMore={loadMore} />}
 
         {isModalOpen && (
           <Modal onClose={closeModal}>

@@ -7,21 +7,23 @@ import css from './image-gallery.module.css';
 const ImageGallery = ({ images, openModal }) => {
   return (
     <ul className={css.gallery}>
-      {images.map(({ id, webformatURL, largeImageURL }) => {
-        return (
-          <ImageGalleryItem
-            key={id}
-            webImg={webformatURL}
-            largeImg={largeImageURL}
-            openModal={openModal}
-          />
-        );
-      })}
+      {images.map(({ id, webformatURL, largeImageURL }) => (
+        <ImageGalleryItem
+          key={id}
+          webImg={webformatURL}
+          largeImg={largeImageURL}
+          openModal={openModal}
+        />
+      ))}
     </ul>
   );
 };
 
 export default ImageGallery;
+
+ImageGallery.defaultProps = {
+  images: [],
+};
 
 ImageGallery.propTypes = {
   openModal: PropTypes.func.isRequired,
